@@ -7,11 +7,11 @@ import io.sentry.android.AndroidSentryClientFactory
 object SentryErrorLogger : ErrorLogger {
 
     override suspend fun init(application: Application) {
-        //TODO Add Sentry DSN here
-        Sentry.init(
-            "DSN",
-            AndroidSentryClientFactory(application)
-        )
+        //TODO Add Sentry DSN here & uncomment
+//        Sentry.init(
+//            "DSN",
+//            AndroidSentryClientFactory(application)
+//        )
     }
 
     override fun logEvent(exception: Exception) {
