@@ -22,7 +22,14 @@
             android:value="${crashlyticsCollectionEnabled}" />
 
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity" />
+
+
+        <activity
+            android:name=".src.splash.SplashActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

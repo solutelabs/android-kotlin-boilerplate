@@ -10,7 +10,7 @@ class RemoteConfigRepository {
     suspend fun init() {
         val remoteConfig = Firebase.remoteConfig
         val configSettings = remoteConfigSettings {
-            minimumFetchIntervalInSeconds = 12
+            minimumFetchIntervalInSeconds = 3600
         }
         remoteConfig.setConfigSettingsAsync(configSettings)
         remoteConfig.fetchAndActivate().suspendTask()
