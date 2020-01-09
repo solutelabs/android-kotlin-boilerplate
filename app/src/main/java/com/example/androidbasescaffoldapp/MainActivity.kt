@@ -1,9 +1,11 @@
 package com.example.androidbasescaffoldapp
 
+import android.content.Context
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import com.example.androidbasescaffoldapp.base.BaseActivity
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
+    override fun getScreenName(context: Context): String = "Hello World Screen (Base)"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

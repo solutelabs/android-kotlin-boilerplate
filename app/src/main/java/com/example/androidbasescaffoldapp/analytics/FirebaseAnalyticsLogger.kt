@@ -34,7 +34,7 @@ object FirebaseAnalyticsLogger : AnalyticsLogger {
     }
 
     override fun setCurrentScreen(activity: Activity, screenName: String) {
-        firebaseAnalytics.setCurrentScreen(activity, screenName, null)
+        firebaseAnalytics.setCurrentScreen(activity, screenName, screenName)
     }
 }
 
