@@ -8,7 +8,9 @@ class AppApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         runBlocking {
-            getErrorLogger().init(this@AppApplication)
+            if (!BuildConfig.DEBUG) {
+                getErrorLogger().init(this@AppApplication)
+            }
         }
     }
 }
