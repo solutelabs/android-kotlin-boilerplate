@@ -19,6 +19,24 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
+        }
+    }
+    flavorDimensions "api"
+    productFlavors {
+        development {
+            dimension "api"
+            applicationIdSuffix ".development"
+            resValue "string", "app_name", "Base-Dev"
+        }
+        staging {
+            dimension "api"
+            applicationIdSuffix ".staging"
+            resValue "string", "app_name", "Base-Staging"
+        }
+        production {
+            dimension "api"
+            resValue "string", "app_name", "Android-Base"
         }
     }
 }
