@@ -11,8 +11,13 @@ android {
         applicationId "com.example.androidbasescaffoldapp"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
+        // Change Only For Public Release
+        def versionMajor = 1 // For Major Features
+        def versionMinor = 0 // For Minor Features
+        def versionPatch = 0 // For Bug Fixing and Patch
+
+        versionCode versionMajor * 10000 + versionMinor * 100 + versionPatch
+        versionName "${versionMajor}.${versionMinor}.${versionPatch}"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -50,4 +55,15 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
+    def lifeCycleVersion = "2.1.0"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifeCycleVersion"
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifeCycleVersion"
+    def liveDataKtxCVersion = "2.2.0-rc03"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$liveDataKtxCVersion"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$liveDataKtxCVersion"
+
+    //Sentry Error Logging
+    implementation 'io.sentry:sentry-android:1.7.27'
+    implementation 'org.slf4j:slf4j-nop:1.7.25'
 }
