@@ -82,4 +82,7 @@ dependencies {
     implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
     implementation 'com.google.firebase:firebase-config-ktx:19.1.0'
     implementation 'com.google.firebase:firebase-perf:19.0.4'
+
+    //UI
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
 }
