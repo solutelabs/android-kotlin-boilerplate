@@ -18,14 +18,9 @@ suspend fun checkForAppUpdate(
     remoteConfigRepo: RemoteConfigRepository
 ): Boolean {
     return suspendCoroutine { continuation ->
-        val update = availableUpdate(remoteConfigRepo)
-
-        if (update == UpdateMode.NoUpdate) {
-            continuation.resume(false)
-        }
-
-        if (update == UpdateMode.FlexibleUpdate) {
-            activity.showAlertDialog(
+        when (availableUpdate(remoteConfigRepo)) {
+            UpdateMode.NoUpdate -> continuation.resume(false)
+            UpdateMode.FlexibleUpdate -> activity.showAlertDialog(
                 title = activity.getString(R.string.title_immediate_update),
                 content = activity.getString(R.string.content_immediate_update),
                 positiveButtonText = activity.getString(R.string.update_alert_btn_positive),
@@ -41,10 +36,7 @@ suspend fun checkForAppUpdate(
                     continuation.resume(false)
                 }
             )
-        }
-
-        if (update == UpdateMode.ImmediateUpdate) {
-            activity.showAlertDialog(
+            UpdateMode.ImmediateUpdate -> activity.showAlertDialog(
                 title = activity.getString(R.string.title_immediate_update),
                 content = activity.getString(R.string.content_immediate_update),
                 positiveButtonText = activity.getString(R.string.update_alert_btn_positive),
@@ -55,7 +47,6 @@ suspend fun checkForAppUpdate(
                 }
             )
         }
-
     }
 }
 
