@@ -63,6 +63,10 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    androidExtensions {
+        experimental = true
+    }
 }
 
 dependencies {
@@ -75,12 +79,17 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
+    //KTX EXTENSIONS
     def lifeCycleVersion = "2.1.0"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifeCycleVersion"
     implementation "androidx.lifecycle:lifecycle-extensions:$lifeCycleVersion"
     def liveDataKtxCVersion = "2.2.0-rc03"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$liveDataKtxCVersion"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$liveDataKtxCVersion"
+    def ktxVersion = "1.1.0"
+    implementation "androidx.core:core-ktx:$ktxVersion"
+    implementation "androidx.collection:collection-ktx:$ktxVersion"
+    implementation "androidx.fragment:fragment-ktx:$ktxVersion"
 
     //Sentry Error Logging
     implementation 'io.sentry:sentry-android:1.7.27'

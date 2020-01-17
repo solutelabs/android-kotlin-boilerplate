@@ -1,1 +1,7 @@
-<resources></resources>
+<resources>
+    <string name="flexible_update_msg">New App Update Available</string>
+    <string name="title_immediate_update">Update available</string>
+    <string name="content_immediate_update">Please update App to new version for better experience.</string>
+    <string name="update_alert_btn_positive">Update</string>
+    <string name="update_alert_btn_negative">Next time</string>
+</resources>
