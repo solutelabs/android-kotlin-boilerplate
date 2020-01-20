@@ -39,7 +39,7 @@ If the latest app version is higher then the current version, it will trigger Fl
 If the current app version is below the latest stable version, then it will trigger an Immediate (Force) update.
 
 
-## Base Activity
+### Base Activity
 Coroutines based Start Activity For Result and Permission manager implementation
 
 
