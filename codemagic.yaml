@@ -103,9 +103,9 @@ workflows:
           keyPassword=$FCI_KEY_PASSWORD
           keyAlias=$FCI_KEY_ALIAS
           storeFile=$FCI_KEYSTORE_PATH
-          EOF
-        - name: Build Android app
-          script: ./gradlew bundleProductionRelease
+          EOF          
+      - name: Build Android app
+        script: ./gradlew bundleProductionRelease
     artifacts:
       - build/**/outputs/**/*.apk
       - build/**/outputs/**/*.aab
