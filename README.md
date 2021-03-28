@@ -51,3 +51,26 @@ Coroutines based Start Activity For Result and Permission manager implementation
 - Jetpack Paging
 - Android KTX
 - Material Themes
+
+### CI / CD
+
+#### Codemagic
+
+Codemagic.yaml file has been added at the root of source code. It contains sample pipelines for different build environments.
+
+###### How to build?
+
+1. Connect the project repository to codemagic using [this guide](https://docs.codemagic.io/getting-started/adding-apps-from-custom-sources/). Codemagic will auto-detect the yaml file which has sample workflow added.
+2. Select workflow and the branch from which buid to be generated. Start Build and it should generate the build.
+
+###### What to be configured?
+- Except `production-store` workflow, all the workflows are configured to use Debug keystore generated on the fly from Codemagic's build machine.
+- For `production-store` workflow, the keystore related environment variables must be replaced with the project specific keystore info.
+
+###### How to distribute?
+Once codemagic generates the artifacts, we can distribute the apps in various ways.
+
+1. Using Firebase App Distribution. [More info](https://firebase.google.com/docs/app-distribution).
+One can automate the firebase distribution as mentioned [here](https://docs.codemagic.io/publishing-yaml/distribution/#publishing-an-app-to-firebase-app-distribution).
+2. Using platforms like [Diawi](https://www.diawi.com/)
+3. Sharing raw apk to user.
