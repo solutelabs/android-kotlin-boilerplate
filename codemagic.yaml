@@ -1,0 +1,117 @@
+workflows:
+  development:
+    name: Development
+    scripts:
+      - |
+        # set up debug keystore
+        rm -f ~/.android/debug.keystore
+        keytool -genkeypair \
+          -alias androiddebugkey \
+          -keypass android \
+          -keystore ~/.android/debug.keystore \
+          -storepass android \
+          -dname 'CN=Android Debug,O=Android,C=US' \
+          -keyalg 'RSA' \
+          -keysize 2048 \
+          -validity 10000
+      - name: Set up local properties
+        script: echo "sdk.dir=$HOME/programs/android-sdk-macosx" > "$FCI_BUILD_DIR/local.properties"
+      - name: Build Android app
+        script: ./gradlew assembleDevelopmentRelease
+    artifacts:
+      - build/**/outputs/**/*.apk
+      - build/**/outputs/**/*.aab
+      - build/**/outputs/**/mapping.txt
+      - flutter_drive.log
+    publishing:
+      email:
+        recipients:
+          - smit.sonani@solutelabs.com
+  staging:
+    name: Staging
+    scripts:
+      - |
+        # set up debug keystore
+        rm -f ~/.android/debug.keystore
+        keytool -genkeypair \
+          -alias androiddebugkey \
+          -keypass android \
+          -keystore ~/.android/debug.keystore \
+          -storepass android \
+          -dname 'CN=Android Debug,O=Android,C=US' \
+          -keyalg 'RSA' \
+          -keysize 2048 \
+          -validity 10000
+      - name: Set up local properties
+        script: echo "sdk.dir=$HOME/programs/android-sdk-macosx" > "$FCI_BUILD_DIR/local.properties"
+      - name: Build Android app
+        script: ./gradlew assembleStagingRelease
+    artifacts:
+      - build/**/outputs/**/*.apk
+      - build/**/outputs/**/*.aab
+      - build/**/outputs/**/mapping.txt
+      - flutter_drive.log
+    publishing:
+      email:
+        recipients:
+          - smit.sonani@solutelabs.com
+  production-adhoc:
+    name: Production - Local Distribution
+    scripts:
+      - |
+        # set up debug keystore
+        rm -f ~/.android/debug.keystore
+        keytool -genkeypair \
+          -alias androiddebugkey \
+          -keypass android \
+          -keystore ~/.android/debug.keystore \
+          -storepass android \
+          -dname 'CN=Android Debug,O=Android,C=US' \
+          -keyalg 'RSA' \
+          -keysize 2048 \
+          -validity 10000
+      - name: Set up local properties
+        script: echo "sdk.dir=$HOME/programs/android-sdk-macosx" > "$FCI_BUILD_DIR/local.properties"
+      - name: Build Android app
+        script: ./gradlew assembleProductionRelease
+    artifacts:
+      - build/**/outputs/**/*.apk
+      - build/**/outputs/**/*.aab
+      - build/**/outputs/**/mapping.txt
+      - flutter_drive.log
+    publishing:
+      email:
+        recipients:
+          - smit.sonani@solutelabs.com
+  production-store:
+    name: Production - Store Distribution
+      environment:
+        vars:
+          FCI_KEYSTORE_PATH: /tmp/keystore.keystore
+          FCI_KEYSTORE: Encrypted(Z0FBQUFBQmdZQjZwZkxFT2s3Y3NTN0lUME8xdUpUc1pMS2V1Rm45bUlxX3ZmNTZlTlN5b0RJZXpiUnJoSEp3SDZDSUk2dEREbDhMZ2ZYTWxEUllMY2VfMm5HU3JtMEtJcHVfQi1Vc0xVS3NIUUFhQXF3LUVnYWVSVDdmWEJ5MjNMNUs0VzNmUVJ2UlJ4YUxzYzY0VDJMOWE1bEh4TG5zUDdMQTd1WEtGWmp5Mk5RckdyODVNdFJNTkxORHY4TkNqcVNlV1AxWUc1Mmx0N2hnSDIyUGJKYVg4aGFIR25taDROOUdGX2RYVVM1Uy1uVXFlZnZIT3N2YUpJTzNqNzhRRFZYRUlxYkdKb2wzSUgtWEg3ajBFd1dZSW16YnVkQXN2Z2xSNFYzcXd4aTJUdmdQV0VJTFJxM0lVMGRIS0pfRFlzR1E3NEpGQUtSTG9yWEhic1V6WlNTVXl5QTlCekx1eThva21pcUtqTldNaTA0QVFSV1pfc0FFbkRKclFsdTd0a0kyN2k4QXhmcjVsaVNpYk9aZHItdGFDbzR0a1hKblY5bk9YYUNnM2ZqMUlUakpVN1l1bFhJWDYxVnNwVm5kekdqOWQzN1piWWJLbzBXemFWOEZQVHNUcUZUc0lXVFV2UjFZajZFWi1MdE04OFAwTGhJVTE2aUU0SU5jUjRMTkgxRi1kb3RnRkgzZWVSRFZUYnBaUzFCYVpPaEFWbDhqblo5bElUYktwbEE3MkR2dXlTd3hxMkVZZEJyLS03NWUyY3l4cDBHZm1NVG1vTzZIaTN3SEt6UTYzZ3VHVUtKd3RFNVEwdExpT01NNGtCaEJMaVZ3RVRSbmZoc194cHdaVWZIVG5KMjNHbDFTb1l5V0dNUDVBbkFXMjJnRS1oU0lrVy11eGYwVGxvVUxCUUtlLTQ2X3lGT1AtOEJPSmZuRXc5QVZoekRxandIdzlMcFZ3Wl9uQUtjN2pweW5Ld3U0ZENoVm1idlM2OGJHWW5VZ3c5clVhMUI1aXRXRzNWSEstRkxPeG9leUNTcWQ4ZU1PMmFaLVA3MTF3cXRWRVROVC1wMW4wRjJSM0VsMElFWEJrc3VtSXY5SjBOR0hEeDMyeEdxX1pqRHhSSUQxcTQxeG84RjhpWkZYMWk0Z3RXeldrQXpBMnFPRUMxQ3IzU0w1VTlqcmxjV0Q0c1VDVTlzRW9NdHVyeVoyeDgxZmRseEtmbTVpMWgwMVZrUlBCN2RNaHhjZVc0ajU1Z3JaVTZqVUpHRjdRS19nMVVqY1l6WHZxS2FXSXItOTZITTllY0ZhZDF4a1NlMVcyUHJxdFZkUFdFUUdJUnF2UlE3cnUtdmp2cDdIX19fNkN2S0lndHlldkZTZXFLNjNXOTBsNnJ4QjdlQTBFU05PR19LUUV3R2JQYTZET2Q3dHdnN3MwdFM4Vi03a1NrWkwzRVRRU1RnMkxQenpTVjNZNkFoZVVsc3VGOTItaHRVNkgwanlYUVhXRHB4TnVhZkphRk5HNnh3ZlZvMXJjUThicTFfTzQ3RndlVE05ck4tTERZUDlpRDI1QTF3S1RjNWJXRTR3VjhSNWlSaFBBdExlRTZmYXRDYU1tU2IwODgyZzBYOVNzeFEzTkpuakNzWFVnak5mbXI3b0NaMWRpM1R2UENnTENKVXo5M2xQRGxtWURHR1FvSEh2ME5FTV8yMmRhN3lxbVpVVk04MFprZVZBcEtpMDhwRndoczdrMjdTQWd5VU1YMHBzQi1CWWdaWFA3YWoyeGRmd01mLWZ3QWE2UmI4TTBPRWdCYlIzN1pIY19QdmZSSE10Ri1xQTFDOTlBOWhobWZsdUZlMDFqd0RrN0lOZlhyUXFlSWs5bVVPWDRjUWdiYnZkelpuZkpabHFnWkhTb1g4VUliVGpoa3ZFZkVxa1pFTzRlUk9qa2FiWFluUFZGNFpQT1JlSGdZUUdfaTFfOTF5NnF2bDVWaUt0UHNjS3hPSF9ZR282LVo5bC1iRmpJVXpSSnRFNWhPbnJyRzVtZTVaN1Q3aC1kT0N0bmxGQXFQLTQyZ1NwT3N3NFBweEE0ejVnS1JSUXR0Y1Q3VFhrWm1vaUpZc1hGTUZqcFRHeGRUQmV4akU3ZWZqQWFxX0VZRlhkOGlRTl9taFZSVDlnckZ3MW5oNTdaclhPM0ZaNjBBd1A1NHdlMXRGcGFVbjQyXzNmNUNLZ1k3eXoxNVVSN3BuWXI4T1paZ1JBQjVVNDJOdjlBdVZUWk1TM0ptOTlMbzlsTjBsV0p3REtnbDRaMzlPdERTVU5sVllIT2FTUllxSVkxMGVGNDl0V1B5c1NmQ01USi01c2RUeThXMnVWbGtGT3BselZMYVlJMHZMUWlQZmgxanY0LVc3ZGQ1TE15emJDeVZyVzZ6LWQ5Mjd4UkVKRTNIaFdGMWlUb2hfb2IzTnBVdHpXNmVJN25CUTR3NjZGckVxRlhGdjZndVRycTFZcHFpa1dqcG01aWx1d3RwcVp6SnFCVGFwVktIRWx4UlVMQkdRRVVwWktzU09EUVRwYUJ2d1UxaUJaeWFxVHpxS3c1eDF2ZUtXc1A2WFVMbUVIcERZQ0dLVzRzYW9YSmlhVkJQdWx5NjFPUXZQRmlZeDI0bEEyN202ZTBVUVpoVTlTOWQzMTlEbzhhWWQwSVdoOHZCVkZTM1Y4LVRESzY0NE11RENCZlZfZDJIM2NQNUd3VV9JOFdtd09WaF92bjdjcHpOUFFQUE1FY1RzbTM2VHNkWWlfaTFqTjUyRGVvSTBXT0tNNVY5VUJqdmNBMGhKeHZMbV9fZVBjd2ZZajNrUFQzODhnamx3Sy1faENlSHdUbUMzVXc0dnhNUmZFYTIxeEdLSXc1LVdwSXppLVhpSGl0UWhaUy1FRXdRVE1FZnFoNjAwdElxVUN6WmhrMllBSjNRcXEyNHozSHJFUmZxNERPNTR6M1J6V1E2TENVS2Y1QWMwM2pPYnFPeDI1eVdPV2N0RkF0SmhBZHFXWlpfYm0tb1FGV0JxOW9VZWtwMzRfVWktTWpUaWpJeW9oLWJLZmxNbnhBYTR6LW1TejNuRkxJejdHYzJPSVE0SnZqZkxlUGVRSVhZVE5OZjhuUmxhWm1WNmVHY2h4a1FmdkhMU0ZWMENyczE1MTdFZ1o3MWhicU56cEZnX0dPMVI1WHkzdUtmaGZLY2o0MUU1OTFkVHZwZTE4OC1XVmNNWjlrb093UlV6akZsUjlsQVVJbVpBRWdYamFrUi1oNDZSVDBPdWJuOEI0LUFoeGxPenpFTFhoSTA0c1lOZFBZWHR0RmU3MXhRVDY5NXRqQzh6WlN5VG13dlVqd2lMNFRjV1RXblJjWGM0dHhSY3lObFZyWmhtTVdIaTlodnJzVFhYZjhqa2lJaVBhbUpEYkxUQ2tuNk9CVFVOUXlJZ0psYURJQmRxNU4xNXlJbEJYTlR2RzdkLUduUDdNb2ljZkN4QXh3WnhfN0wzTmtSTGh1QUNlNTh5bXljSi1xSk96V1o5XzgxT3RzRVc2OThXb2lkRjhfOVlCNzdlX1hGalVIOUpXcUlFQVpQS1RDVVo3dEU2dnA4cDRXa0VvZlVaN2VXa2Z4cEJuZ2VaLUMyRVlGRDdEUDl0b0hGcDNucWtKLTJ0azRhNGlKS2diVHJqYnpqOTRXSGU5QXRUUktCWjhJdW5VSDJyV1hHUFFOR0lOb3FKVTlpSkFlSlphZ18wSnJ5WEtTeHBXbHB0UjVQZ05kb3UzUnc0Rm42dlFVMHotNk5mcWlqZlZyS1lINzhBYkp4cUZZUVFhZkFXZE1kNkVPZXRqMHlmU3RnUEFVS2N6UjBsSlg0MDJBZGJlZUh6cmw2RXRqNXU3QmktMGxuNUlCSVNsWVkzRGwtQl93eGlndVBUZWtsUDd0QUhFZ25YMlB6YjlhNzVndXVRN183UjZZdmQ3dFVCbnBHSVZuVVk4QUhYd0E2cWozbEU1dzU3cFFJWkRNV2N1dEU2RE1yc0JPbzVnUXRERl9sRUx6WTdZQjBkbzI1WWhnejNlbTdHbERJbnNqNmxwc1UwcVp0MFpkZnMxTHNZYWxUYUlmeWhkeE5vbXFGQTRXSlF2bkhLTXQtZWNzRnlTQ2tNRmVKeFJvcncyOW9iSGdnRTdENzBKU2trMzlVcEhXV2k5TmVzNWVOT28yN041Mk03OEF3dEdsbkd5c1VkTVFaeGN1SmQ4aVVUb1Z4WHZDdGFGOENMT3lGWEFHNGxTWVZxbkVLNXd3dnV1QzdOSE9vbmExUTJ5Y2VZVEF4VDZxMU04OFJ4WjZrREM4eGJ6dVRQVVJRZDhjRTdOV3FsSERlR29rd201OXYwT1ViU0RhTk9aWC1hbkFrbTdHMXZXTTYtZklyelVCOXFMRU90MkJvd3d5endJem1ob0pnUVRxdlZpWWY3NHpYTC04ay10UFJZaHZYS3NEQ0dPb1hpT2NUNDkwelBPNkplV1g0NkpUVkc5TlpNdl9vTnE2b0dTaWp4c1RYWnpSOEw3RUlLcHFNS0JhT3pwaGFvZThPLTk0eG8yZGUtWVN4Sm5BdDdSU2ZFRU1BRThjbkJVVUxuQlhsOGdZS3FuS0t5ZXl5eWdfNjZnUDNZQnVhc0RzLTFwV0J4VmR4blFaNVJxWVptNTBWR2M3cFlvYms2Ylh2QjhJaGFjdGRRN092QlVBTFZQdWlmcjdfZzFLWXgxS25iNGgzVG1JaWYtMlluTmM1SjJkbmdiUVBTQ0g5b285bUtpdWdNeUpfUzY0N3NZek00Q0Z2dGV1NlFMdUNsTzVtMWo0ajVMalVZLVBWQmxoeUhPUHRRLWlmMVcxUFBsa21JYUVuakVmZ2VpTDlmekdzaWhSUlJQWnh2cVdnRy1MZnFsMjQ4RVhIWXh0MUd1VXlVdFpoY3hCLXVXenZPblFtWU9MZV9Vd1BuZ1E2R053ZExXWGdqTEJ3eXRGd2RGMGhvbVJwRUZPR0hWLU1jdklra0pCNUNjU20xdDlVdjdwaFdtQXQxUHZnUmtSSVo2RnlJWTVNM3hCdDB3S2stOGRObEJ4N2NwWC1sRzF6TTdjSzRJTVJWSU1RcnQwbHNlZ2VudXN0SmpULTFXUE1PSHp0UE82dXV0THhmRlBtRE00V2l0eWtZb3NxX0I1c3R3Mm9YVEdwTi00bXJMV2J2X1ZuUEdhYXRMNl92OExJMW95YjVqcUJEMzFmczhTVDczbldncENjYnFhMGw2TTBGZE56MWFqMkxxUi0yRjR5aWJrejZxWlBTRVRETkxWdzZmNVpzNmgtSFhPTmxjNzhGVWVBYWhlczYwODBIWXZGYTJBYkNrVm01WGF1ZlAzUnNILVpaSUVhU3ZQUU5aX1lzczl3R3ZoNzA1Z1U5SUNTWlZCbHpMNjlDYThwTlo3SDZPQTRJZ25VQT09)
+          FCI_KEYSTORE_PASSWORD: Encrypted(Z0FBQUFBQmdZQjZwX2lucmJ3a2VfRnpERDdjRWxBTGFURjV2akhiT3FNSW9XZ0hsTW9fZW5wemZJSy1pbDcxbFpMcldsSXJvWnFOQ1dzNzN3RUNrOU82aDVzbEFEc0dKeG1UaVY1Q2dkVlZua1ZqNnN3TDFLOVk9)
+          FCI_KEY_PASSWORD: Encrypted(Z0FBQUFBQmdZQjZwSHYtV0duMTBJSXlHZG5mQnlTVmJyVGI4TGkzUGlMRWhlZm9Bb1pPZVNDME55NGxTdTlIdnM0VE00Z1RBX3pJSHdOcjdDZTltLWtkYkJzTVh6TXR6TnhmRXVnU0phaTh4bXduZWtDc3VVdEk9)
+          FCI_KEY_ALIAS: Encrypted(Z0FBQUFBQmdZQjZwSXhaOGpEVlN0NmtmQUNvckNLejhIQzQzSldhTWtYVzJhZUZCRVhET3JjaUlYbVlpb3lKNWxqUXdqUzFGekNGN0dSODBsYjBuOHFqVU9RR2x5eVRpVHc9PQ==)
+      scripts:
+        - name: Set up local properties
+          script: echo "sdk.dir=$HOME/programs/android-sdk-macosx" > "$FCI_BUILD_DIR/local.properties"
+        - name: Set up key.properties file for code signing
+          script: |
+            echo $FCI_KEYSTORE | base64 --decode > $FCI_KEYSTORE_PATH
+            cat >> "$FCI_BUILD_DIR/key.properties" <<EOF
+            storePassword=$FCI_KEYSTORE_PASSWORD
+            keyPassword=$FCI_KEY_PASSWORD
+            keyAlias=$FCI_KEY_ALIAS
+            storeFile=$FCI_KEYSTORE_PATH
+            EOF
+          - name: Build Android app
+            script: ./gradlew bundleProductionRelease
+      artifacts:
+        - build/**/outputs/**/*.apk
+        - build/**/outputs/**/*.aab
+        - build/**/outputs/**/mapping.txt
+        - flutter_drive.log
+    publishing:
+      email:
+        recipients:
+          - smit.sonani@solutelabs.com
