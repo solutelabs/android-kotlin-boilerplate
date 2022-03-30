@@ -34,7 +34,9 @@ object FirebaseAnalyticsLogger : AnalyticsLogger {
     }
 
     override fun setCurrentScreen(activity: Activity, screenName: String) {
-        firebaseAnalytics?.setCurrentScreen(activity, screenName, screenName)
+        val bundle = Bundle()
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, screenName)
+        firebaseAnalytics?.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle);
     }
 }
 
